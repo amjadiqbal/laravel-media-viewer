@@ -17,6 +17,8 @@ with proper Range support.
 [![PHP Version](https://img.shields.io/packagist/php-v/amjadiqbal/laravel-media-viewer?style=flat-square)](https://packagist.org/packages/amjadiqbal/laravel-media-viewer)
 [![License](https://img.shields.io/packagist/l/amjadiqbal/laravel-media-viewer.svg?style=flat-square)](LICENSE.md)
 
+**Docs and demo:** [amjad.com.pk/laravel/packages/laravel-media-viewer](https://amjad.com.pk/laravel/packages/laravel-media-viewer)
+
 <p align="center"><img src="art/screenshot.png" alt="A Livewire file gallery with PDF thumbnails, and the PDF viewer showing a search match" width="100%"></p>
 
 ```blade

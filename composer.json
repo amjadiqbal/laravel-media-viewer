@@ -20,7 +20,7 @@
     ],
     "type": "library",
     "license": "MIT",
-    "homepage": "https://github.com/amjadiqbal/laravel-media-viewer",
+    "homepage": "https://amjad.com.pk/laravel/packages/laravel-media-viewer",
     "authors": [
         {
             "name": "Amjad Iqbal",
@@ -31,7 +31,7 @@
     "support": {
         "issues": "https://github.com/amjadiqbal/laravel-media-viewer/issues",
         "source": "https://github.com/amjadiqbal/laravel-media-viewer",
-        "docs": "https://github.com/amjadiqbal/laravel-media-viewer#readme"
+        "docs": "https://amjad.com.pk/laravel/packages/laravel-media-viewer"
     },
     "require": {
         "php": "^8.3",
