@@ -50,10 +50,10 @@ abstract class MediaComponent extends Component
         return app(MediaViewer::class)->kind($file);
     }
 
-    /** Assets print once per page, never inside a Livewire update response. */
+    /** Assets print once per page, never inside a Livewire update response, and not at all when the layout prints them. */
     public function assets(): HtmlString
     {
-        if (request()->hasHeader('X-Livewire')) {
+        if (! config('media-viewer.assets.inject', true) || request()->hasHeader('X-Livewire')) {
             return new HtmlString('');
         }
 

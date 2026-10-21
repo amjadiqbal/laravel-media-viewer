@@ -40,6 +40,18 @@ it('points at local copies when assets are self-hosted', function () {
     expect((string) app(Assets::class)->render())->toContain('http://localhost/vendor/media-viewer/pdfjs/build/pdf.min.mjs');
 });
 
+it('prints assets from the directive even after a component did, and not from components when inject is off', function () {
+    // Content renders before the layout: the component prints first, the <head> directive still prints.
+    expect(substr_count(Blade::render('<x-media-viewer::pdf disk="local" path="docs/a.pdf" />@mediaViewerAssets'), 'id="media-viewer-config"'))->toBe(2);
+
+    config(['media-viewer.assets.inject' => false]);
+    app()->forgetScopedInstances();
+
+    $html = Blade::render('@mediaViewerAssets<x-media-viewer::pdf disk="local" path="docs/a.pdf" />');
+    expect(substr_count($html, 'id="media-viewer-config"'))->toBe(1);
+    expect(strpos($html, 'importmap'))->toBeLessThan(strpos($html, 'data-mv="pdf"'));
+});
+
 it('can drop the import map', function () {
     config(['media-viewer.assets.integrity' => false]);
 

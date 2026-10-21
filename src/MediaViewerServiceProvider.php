@@ -34,7 +34,7 @@ class MediaViewerServiceProvider extends ServiceProvider
         $this->registerRoutes();
 
         Blade::componentNamespace('AmjadIqbal\\MediaViewer\\View\\Components', 'media-viewer');
-        Blade::directive('mediaViewerAssets', fn () => '<?php echo app('.Assets::class.'::class)->render(); ?>');
+        Blade::directive('mediaViewerAssets', fn () => '<?php echo app('.Assets::class.'::class)->render(true); ?>');
 
         if (class_exists(Livewire::class)) {
             Livewire::component('media-viewer-gallery', MediaGallery::class);

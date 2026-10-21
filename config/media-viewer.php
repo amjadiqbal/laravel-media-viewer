@@ -120,9 +120,12 @@ return [
     |     php artisan media-viewer:assets
     |
     | "integrity" prints an import map with a sha384 hash for every module
-    | file, so a changed file is refused by the browser. Put
-    | @mediaViewerAssets in your layout's <head>, before other module
-    | scripts, for the hashes to apply everywhere.
+    | file, so a changed file is refused by the browser.
+    |
+    | "inject": the first viewer on a page prints these tags itself. To put
+    | them in your layout's <head> instead (best for the import map, and
+    | needed when a viewer first appears after a Livewire action), add
+    | @mediaViewerAssets there and set this to false.
     |
     */
 
@@ -131,6 +134,7 @@ return [
         'cdn' => 'https://cdn.jsdelivr.net/npm',
         'local_path' => 'vendor/media-viewer',
         'integrity' => true,
+        'inject' => (bool) env('MEDIA_VIEWER_INJECT_ASSETS', true),
     ],
 
     /*

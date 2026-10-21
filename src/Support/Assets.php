@@ -41,9 +41,14 @@ class Assets
         return rtrim((string) $this->config->get('media-viewer.assets.cdn'), '/').'/'.$pinned['package'].'@'.$pinned['version'];
     }
 
-    public function render(): HtmlString
+    /**
+     * The tags, once per request. @mediaViewerAssets passes $force: Blade renders a
+     * page's content before its layout, so by the time a <head> directive runs a
+     * component may already have printed them.
+     */
+    public function render(bool $force = false): HtmlString
     {
-        if ($this->printed) {
+        if ($this->printed && ! $force) {
             return new HtmlString('');
         }
         $this->printed = true;
