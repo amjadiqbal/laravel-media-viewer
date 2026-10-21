@@ -113,6 +113,12 @@ it('answers 404 for a missing file', function () {
     $this->get(MediaViewer::url('local', 'docs/missing.pdf'))->assertNotFound();
 });
 
+it('makes the browser revalidate before reusing a cached copy', function () {
+    $cacheControl = $this->get(MediaViewer::url('local', 'docs/report.pdf'))->headers->get('Cache-Control');
+
+    expect($cacheControl)->toContain('no-cache')->toContain('private')->not->toContain('max-age');
+});
+
 it('binds the url to the user who saw the viewer', function () {
     $this->actingAs(user(1));
     $url = MediaViewer::url('local', 'docs/report.pdf');

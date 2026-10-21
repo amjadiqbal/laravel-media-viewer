@@ -38,7 +38,6 @@ class FileController
         abort_unless($exists, 404);
 
         $expires = (int) $request->query('expires');
-        $maxAge = max(0, $expires - time());
 
         if ($viewer->extension($clean) === 'm3u8') {
             abort_if($filesystem->size($clean) > self::MAX_PLAYLIST_BYTES, 413);
@@ -69,6 +68,6 @@ class FileController
             ]);
         }
 
-        return FileResponse::make($request, $filesystem, $clean, (string) $viewer->contentType($clean), $maxAge);
+        return FileResponse::make($request, $filesystem, $clean, (string) $viewer->contentType($clean));
     }
 }

@@ -16,7 +16,7 @@ class FileResponse
 {
     public const CHUNK = 1048576;
 
-    public static function make(Request $request, Filesystem $disk, string $path, string $contentType, int $maxAge): Response
+    public static function make(Request $request, Filesystem $disk, string $path, string $contentType): Response
     {
         $size = $disk->size($path);
         $modified = $disk->lastModified($path);
@@ -28,7 +28,10 @@ class FileResponse
             'Accept-Ranges' => 'bytes',
             'ETag' => $etag,
             'Last-Modified' => $lastModified,
-            'Cache-Control' => 'private, max-age='.max(0, $maxAge),
+            // no-cache, not max-age: the browser must ask again before reusing a copy, so the
+            // signature, user binding and Gate are re-checked (a cheap 304 when still allowed).
+            // A cached 200 would otherwise outlive a logout on a shared computer.
+            'Cache-Control' => 'private, no-cache',
             'Content-Disposition' => self::disposition($path),
             'X-Content-Type-Options' => 'nosniff',
             'Content-Security-Policy' => "default-src 'none'; sandbox",
