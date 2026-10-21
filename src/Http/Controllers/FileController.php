@@ -59,6 +59,8 @@ class FileController
                 'Content-Type' => 'application/vnd.apple.mpegurl',
                 'Cache-Control' => 'no-store',
                 'X-Content-Type-Options' => 'nosniff',
+                'Content-Security-Policy' => "default-src 'none'; sandbox",
+                'Cross-Origin-Resource-Policy' => 'same-origin',
             ]);
         }
 

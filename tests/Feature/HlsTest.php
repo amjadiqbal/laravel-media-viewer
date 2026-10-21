@@ -16,6 +16,8 @@ it('rewrites a private hls playlist so every level and segment is signed and pla
     $master->assertOk()
         ->assertHeader('Content-Type', 'application/vnd.apple.mpegurl');
     expect($master->headers->get('Cache-Control'))->toContain('no-store');
+    expect($master->headers->get('Content-Security-Policy'))->toBe("default-src 'none'; sandbox");
+    $master->assertHeader('X-Content-Type-Options', 'nosniff');
 
     preg_match('~^(http\S+720p/index\.m3u8\?\S+)$~m', $master->getContent(), $level);
     expect($level)->toHaveCount(2);

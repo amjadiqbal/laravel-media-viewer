@@ -10,7 +10,8 @@
 Show PDFs, video and audio stored on any Laravel disk, private ones included, without
 making the files public. Blade and Livewire components give you a **pdf.js PDF viewer**
 (page navigation, zoom, search, thumbnails) and a **Video.js player with HLS**, and every
-file is served through a **signed, expiring, user-bound URL** with proper Range support.
+file is served through a **signed, expiring URL** (bound to the user when someone is signed in)
+with proper Range support.
 
 [![Latest Version](https://img.shields.io/packagist/v/amjadiqbal/laravel-media-viewer.svg?style=flat-square)](https://packagist.org/packages/amjadiqbal/laravel-media-viewer)
 [![PHP Version](https://img.shields.io/packagist/php-v/amjadiqbal/laravel-media-viewer?style=flat-square)](https://packagist.org/packages/amjadiqbal/laravel-media-viewer)
@@ -34,7 +35,7 @@ Showing an uploaded file in Laravel usually means one of three compromises:
   ignores toolbar options in some, and behaves differently again on iOS.
 
 This package fixes all three. Files stay on a private disk. The page gets a short-lived signed
-URL that only the signed-in user can use. The stream route answers Range requests correctly,
+URL; when a user is signed in, only that user can use it. The stream route answers Range requests correctly,
 and the viewers are the same pdf.js and Video.js UI in every browser.
 
 ## Features
@@ -43,8 +44,10 @@ and the viewers are the same pdf.js and Video.js UI in every browser.
   search with match count and highlighting, full screen, optional download button, keyboard
   friendly, dark mode.
 - **PDF thumbnails** for lists, rendered lazily as they scroll into view. Through Range
-  requests a thumbnail fetches only what its page needs. In our test, page 1 of a 4.6 MB,
-  60-page PDF took 216 KB.
+  requests the browser fetches only what its page needs. In our test, page 1 of a 4.6 MB,
+  60-page PDF took 216 KB. (On a remote disk whose stream can't seek, such as S3 in `stream`
+  mode, the app still reads the file from the start up to the requested offset; use
+  `redirect` mode there, see [Delivery](#delivery-stream-or-redirect).)
 - **Video and audio** (Video.js 10.1.0): `.mp4`, `.webm`, `.mov`, `.mp3`, `.m4a`, `.ogg`, `.wav`,
   `.flac` and more, with seeking over Range requests.
 - **HLS from a private disk**: `.m3u8` plays through Video.js's hls.js adapter. Playlists are
@@ -52,7 +55,7 @@ and the viewers are the same pdf.js and Video.js UI in every browser.
 - **Livewire**: the components work inside Livewire components and with `wire:navigate`, and
   `<livewire:media-viewer-gallery>` gives you a file list with thumbnails next to a viewer.
 - **Security** (details in [Security model](#security-model)): disk and extension allow-lists,
-  signed and expiring URLs bound to the user, an optional Gate checked on every request,
+  signed and expiring URLs (bound to the signed-in user), an optional Gate checked on every request,
   path-traversal protection, and Subresource Integrity for every pdf.js and Video.js file.
 - Any disk: `local`, `public`, S3, R2 or anything else Flysystem supports. Optionally redirect
   to the disk's own temporary URL to save your server's bandwidth.
@@ -230,9 +233,12 @@ This package makes sure only the right people, and only for a while, get to view
 ## Delivery: stream or redirect
 
 `delivery` is `stream` by default: the app streams every file itself, with full Range support,
-from any disk.
+from any disk. Local disks seek straight to the requested range. Many remote disks (S3 through
+Flysystem, for example) return a stream that can't seek, so the app reads and discards the bytes
+before the range: correct, but slow for seeking far into a large remote file.
 
-For S3-compatible disks you can set `delivery` to `redirect`. The route still checks the signature,
+For any disk that provides temporary URLs (S3 and S3-compatible disks such as R2, or a `local`
+disk with `serve` enabled) you can set `delivery` to `redirect`. The route still checks the signature,
 user and Gate, then redirects to the disk's own `temporaryUrl()`, so the bytes come straight
 from the bucket. HLS playlists are still rewritten by the app. pdf.js and hls.js fetch the file
 with JavaScript, so the bucket needs CORS:

@@ -6,6 +6,14 @@ All notable changes to `laravel-media-viewer` are documented here. The format fo
 
 ## [Unreleased]
 
+### Fixed
+
+- HLS playlist responses now send the same `Content-Security-Policy: sandbox` and
+  `Cross-Origin-Resource-Policy` headers as every other file.
+- README: URLs are bound to the user only when someone is signed in; Range savings apply
+  between the browser and the app (non-seekable remote streams are read up to the offset);
+  redirect mode works for any disk with temporary URLs, not only S3.
+
 ## [0.1.0] - 2026-10-21
 
 ### Added
