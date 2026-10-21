@@ -6,6 +6,8 @@ All notable changes to `laravel-media-viewer` are documented here. The format fo
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-21
+
 ### Fixed
 
 - HLS playlist responses now send the same `Content-Security-Policy: sandbox` and
