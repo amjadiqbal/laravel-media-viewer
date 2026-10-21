@@ -56,12 +56,12 @@ class AssetsCommand extends Command
         $files->deleteDirectory($target);
 
         // pdf.js: the hashed modules plus the data the worker fetches on demand.
-        foreach (['build', 'cmaps', 'standard_fonts', 'wasm', 'iccs', 'web/images'] as $directory) {
+        foreach (['cmaps', 'standard_fonts', 'wasm', 'iccs', 'web/images'] as $directory) {
             if ($files->isDirectory($sources['pdfjs'].'/'.$directory)) {
                 $files->copyDirectory($sources['pdfjs'].'/'.$directory, $target.'/pdfjs/'.$directory);
             }
         }
-        foreach (['web/pdf_viewer.mjs', 'web/pdf_viewer.css'] as $file) {
+        foreach (array_keys($pinned['pdfjs']['files']) as $file) {
             $files->ensureDirectoryExists(dirname($target.'/pdfjs/'.$file));
             $files->copy($sources['pdfjs'].'/'.$file, $target.'/pdfjs/'.$file);
         }
