@@ -1,0 +1,14 @@
+includes:
+  - vendor/larastan/larastan/extension.neon
+
+parameters:
+  paths:
+    - src
+  level: 6
+  tmpDir: build/phpstan
+  ignoreErrors:
+    # Larastan checks view names against the app's view paths and cannot see the
+    # package's "media-viewer::" namespace (registered in the service provider).
+    # The Blade components avoid this by returning the view name from render().
+    - identifier: argument.type
+      path: src/Livewire/MediaGallery.php
