@@ -64,8 +64,9 @@
                 </button>
             </div>
         </div>
-        <div class="mv-pdf__stage">
-            <div class="mv-pdf__scroller" data-mv-scroller tabindex="0"><div class="pdfViewer"></div></div>
+        {{-- pdf.js requires an absolutely positioned container: set inline so it never depends on CSS load order. --}}
+        <div class="mv-pdf__stage" style="position: relative">
+            <div class="mv-pdf__scroller" data-mv-scroller tabindex="0" style="position: absolute; inset: 0; overflow: auto"><div class="pdfViewer"></div></div>
             <div class="mv-status" data-mv-status>{{ __('media-viewer::viewer.loading') }}</div>
         </div>
     </div>

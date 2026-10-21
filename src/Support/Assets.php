@@ -87,7 +87,7 @@ class Assets
         }
 
         $html .= '<script type="application/json" id="media-viewer-config">'.json_encode($config, $flags).'</script>'."\n";
-        $html .= '<link rel="stylesheet" href="'.e($this->own('media-viewer.css')).'" integrity="'.self::hash('media-viewer.css').'">'."\n";
+        $html .= '<link rel="stylesheet" href="'.e($this->own('media-viewer.css')).'" integrity="'.self::hash('media-viewer.css').'" data-mv-asset>'."\n";
         $html .= '<script type="module" src="'.e($this->own('media-viewer.js')).'" integrity="'.self::hash('media-viewer.js').'"></script>'."\n";
 
         return new HtmlString($html);

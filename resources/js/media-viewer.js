@@ -345,8 +345,19 @@ function mount(root) {
   }
 }
 
+// The stylesheet may have been printed inside a Livewire component, whose next
+// morph would remove it. Keep one copy of it in <head>, out of Livewire's reach.
+function adoptStyles() {
+  document.querySelectorAll('body link[data-mv-asset]').forEach((link) => {
+    const kept = [...document.head.querySelectorAll('link[data-mv-asset]')].some((other) => other.href === link.href);
+    if (kept) link.remove();
+    else document.head.append(link);
+  });
+}
+
 function scan(node) {
   if (node.nodeType !== 1) return;
+  adoptStyles();
   if (node.matches('[data-mv]')) mount(node);
   node.querySelectorAll('[data-mv]').forEach(mount);
 }
